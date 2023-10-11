@@ -1,0 +1,695 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище DbCleaning_Model" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="tClient">
+          <Key>
+            <PropertyRef Name="IdClient" />
+          </Key>
+          <Property Name="IdClient" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Address" Type="nvarchar" MaxLength="50" />
+          <Property Name="Mail" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Phone" Type="int" />
+        </EntityType>
+        <EntityType Name="tOrder">
+          <Key>
+            <PropertyRef Name="IdOrder" />
+          </Key>
+          <Property Name="IdOrder" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdClient" Type="bigint" Nullable="false" />
+          <Property Name="IdPersonal" Type="bigint" Nullable="false" />
+          <Property Name="Cost" Type="money" Nullable="false" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "DbCleaning_Krasnoperov.dbo.tOrderPackage" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="tOrderPackage">
+          <Key>
+            <PropertyRef Name="IdOrder" />
+            <PropertyRef Name="IdPackage" />
+          </Key>
+          <Property Name="IdOrder" Type="bigint" Nullable="false" />
+          <Property Name="IdPackage" Type="bigint" Nullable="false" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "DbCleaning_Krasnoperov.dbo.tOrderService" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="tOrderService">
+          <Key>
+            <PropertyRef Name="IdOrder" />
+            <PropertyRef Name="IdService" />
+          </Key>
+          <Property Name="IdOrder" Type="bigint" Nullable="false" />
+          <Property Name="IdService" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tPackage">
+          <Key>
+            <PropertyRef Name="IdPackage" />
+          </Key>
+          <Property Name="IdPackage" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdPackageType" Type="bigint" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="Cost" Type="money" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tPackageType">
+          <Key>
+            <PropertyRef Name="IdPackageType" />
+          </Key>
+          <Property Name="IdPackageType" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PackageType" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="tPerson">
+          <Key>
+            <PropertyRef Name="IdPerson" />
+          </Key>
+          <Property Name="IdPerson" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdPosition" Type="bigint" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="150" />
+          <Property Name="Mail" Type="nvarchar" MaxLength="50" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="tPosition">
+          <Key>
+            <PropertyRef Name="IdPosition" />
+          </Key>
+          <Property Name="IdPosition" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="Pay" Type="money" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tResponsive">
+          <Key>
+            <PropertyRef Name="IdResponsive" />
+          </Key>
+          <Property Name="IdResponsive" Type="bigint" Nullable="false" />
+          <Property Name="IdOrder" Type="bigint" Nullable="false" />
+          <Property Name="Responsive" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tService">
+          <Key>
+            <PropertyRef Name="IdService" />
+          </Key>
+          <Property Name="IdService" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="Photo" Type="image" />
+          <Property Name="Cost" Type="money" Nullable="false" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "DbCleaning_Krasnoperov.dbo.tServicePackage" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="tServicePackage">
+          <Key>
+            <PropertyRef Name="IdPackage" />
+            <PropertyRef Name="IdService" />
+          </Key>
+          <Property Name="IdPackage" Type="bigint" Nullable="false" />
+          <Property Name="IdService" Type="bigint" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_tOrder_tClient">
+          <End Role="tClient" Type="Self.tClient" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tOrder" Type="Self.tOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tClient">
+              <PropertyRef Name="IdClient" />
+            </Principal>
+            <Dependent Role="tOrder">
+              <PropertyRef Name="IdClient" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tOrder_tPerson">
+          <End Role="tPerson" Type="Self.tPerson" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tOrder" Type="Self.tOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tPerson">
+              <PropertyRef Name="IdPerson" />
+            </Principal>
+            <Dependent Role="tOrder">
+              <PropertyRef Name="IdPersonal" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tOrderPackage_tOrder">
+          <End Role="tOrder" Type="Self.tOrder" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tOrderPackage" Type="Self.tOrderPackage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tOrder">
+              <PropertyRef Name="IdOrder" />
+            </Principal>
+            <Dependent Role="tOrderPackage">
+              <PropertyRef Name="IdOrder" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tOrderPackage_tPackage">
+          <End Role="tPackage" Type="Self.tPackage" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tOrderPackage" Type="Self.tOrderPackage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tPackage">
+              <PropertyRef Name="IdPackage" />
+            </Principal>
+            <Dependent Role="tOrderPackage">
+              <PropertyRef Name="IdPackage" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tOrderService_tOrder">
+          <End Role="tOrder" Type="Self.tOrder" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tOrderService" Type="Self.tOrderService" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tOrder">
+              <PropertyRef Name="IdOrder" />
+            </Principal>
+            <Dependent Role="tOrderService">
+              <PropertyRef Name="IdOrder" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tOrderService_tService">
+          <End Role="tService" Type="Self.tService" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tOrderService" Type="Self.tOrderService" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tService">
+              <PropertyRef Name="IdService" />
+            </Principal>
+            <Dependent Role="tOrderService">
+              <PropertyRef Name="IdService" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tPackage_tPackageType">
+          <End Role="tPackageType" Type="Self.tPackageType" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tPackage" Type="Self.tPackage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tPackageType">
+              <PropertyRef Name="IdPackageType" />
+            </Principal>
+            <Dependent Role="tPackage">
+              <PropertyRef Name="IdPackageType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tPerson_tPosition">
+          <End Role="tPosition" Type="Self.tPosition" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tPerson" Type="Self.tPerson" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tPosition">
+              <PropertyRef Name="IdPosition" />
+            </Principal>
+            <Dependent Role="tPerson">
+              <PropertyRef Name="IdPosition" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tResponsive_tOrder">
+          <End Role="tOrder" Type="Self.tOrder" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tResponsive" Type="Self.tResponsive" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tOrder">
+              <PropertyRef Name="IdOrder" />
+            </Principal>
+            <Dependent Role="tResponsive">
+              <PropertyRef Name="IdOrder" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tServicePackage_tPackage">
+          <End Role="tPackage" Type="Self.tPackage" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tServicePackage" Type="Self.tServicePackage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tPackage">
+              <PropertyRef Name="IdPackage" />
+            </Principal>
+            <Dependent Role="tServicePackage">
+              <PropertyRef Name="IdPackage" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tServicePackage_tService">
+          <End Role="tService" Type="Self.tService" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tServicePackage" Type="Self.tServicePackage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tService">
+              <PropertyRef Name="IdService" />
+            </Principal>
+            <Dependent Role="tServicePackage">
+              <PropertyRef Name="IdService" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище DbCleaning_ModelContainer">
+          <EntitySet Name="tClient" EntityType="Self.tClient" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tOrder" EntityType="Self.tOrder" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tPackage" EntityType="Self.tPackage" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tPackageType" EntityType="Self.tPackageType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tPerson" EntityType="Self.tPerson" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tPosition" EntityType="Self.tPosition" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tResponsive" EntityType="Self.tResponsive" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tService" EntityType="Self.tService" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tOrderPackage" EntityType="Self.tOrderPackage" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [tOrderPackage].[IdOrder] AS [IdOrder], 
+    [tOrderPackage].[IdPackage] AS [IdPackage]
+    FROM [dbo].[tOrderPackage] AS [tOrderPackage]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="tOrderService" EntityType="Self.tOrderService" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [tOrderService].[IdOrder] AS [IdOrder], 
+    [tOrderService].[IdService] AS [IdService]
+    FROM [dbo].[tOrderService] AS [tOrderService]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="tServicePackage" EntityType="Self.tServicePackage" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [tServicePackage].[IdPackage] AS [IdPackage], 
+    [tServicePackage].[IdService] AS [IdService]
+    FROM [dbo].[tServicePackage] AS [tServicePackage]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_tOrder_tClient" Association="Self.FK_tOrder_tClient">
+            <End Role="tClient" EntitySet="tClient" />
+            <End Role="tOrder" EntitySet="tOrder" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tOrder_tPerson" Association="Self.FK_tOrder_tPerson">
+            <End Role="tPerson" EntitySet="tPerson" />
+            <End Role="tOrder" EntitySet="tOrder" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tOrderPackage_tOrder" Association="Self.FK_tOrderPackage_tOrder">
+            <End Role="tOrder" EntitySet="tOrder" />
+            <End Role="tOrderPackage" EntitySet="tOrderPackage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tOrderPackage_tPackage" Association="Self.FK_tOrderPackage_tPackage">
+            <End Role="tPackage" EntitySet="tPackage" />
+            <End Role="tOrderPackage" EntitySet="tOrderPackage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tOrderService_tOrder" Association="Self.FK_tOrderService_tOrder">
+            <End Role="tOrder" EntitySet="tOrder" />
+            <End Role="tOrderService" EntitySet="tOrderService" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tOrderService_tService" Association="Self.FK_tOrderService_tService">
+            <End Role="tService" EntitySet="tService" />
+            <End Role="tOrderService" EntitySet="tOrderService" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tPackage_tPackageType" Association="Self.FK_tPackage_tPackageType">
+            <End Role="tPackageType" EntitySet="tPackageType" />
+            <End Role="tPackage" EntitySet="tPackage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tPerson_tPosition" Association="Self.FK_tPerson_tPosition">
+            <End Role="tPosition" EntitySet="tPosition" />
+            <End Role="tPerson" EntitySet="tPerson" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tResponsive_tOrder" Association="Self.FK_tResponsive_tOrder">
+            <End Role="tOrder" EntitySet="tOrder" />
+            <End Role="tResponsive" EntitySet="tResponsive" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tServicePackage_tPackage" Association="Self.FK_tServicePackage_tPackage">
+            <End Role="tPackage" EntitySet="tPackage" />
+            <End Role="tServicePackage" EntitySet="tServicePackage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tServicePackage_tService" Association="Self.FK_tServicePackage_tService">
+            <End Role="tService" EntitySet="tService" />
+            <End Role="tServicePackage" EntitySet="tServicePackage" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DbCleaning_Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="tClient">
+          <Key>
+            <PropertyRef Name="IdClient" />
+          </Key>
+          <Property Name="IdClient" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Mail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Phone" Type="Int32" />
+          <NavigationProperty Name="tOrder" Relationship="Self.FK_tOrder_tClient" FromRole="tClient" ToRole="tOrder" />
+        </EntityType>
+        <EntityType Name="tOrder">
+          <Key>
+            <PropertyRef Name="IdOrder" />
+          </Key>
+          <Property Name="IdOrder" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdClient" Type="Int64" Nullable="false" />
+          <Property Name="IdPersonal" Type="Int64" Nullable="false" />
+          <Property Name="Cost" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <NavigationProperty Name="tClient" Relationship="Self.FK_tOrder_tClient" FromRole="tOrder" ToRole="tClient" />
+          <NavigationProperty Name="tPerson" Relationship="Self.FK_tOrder_tPerson" FromRole="tOrder" ToRole="tPerson" />
+          <NavigationProperty Name="tResponsive" Relationship="Self.FK_tResponsive_tOrder" FromRole="tOrder" ToRole="tResponsive" />
+          <NavigationProperty Name="tPackage" Relationship="Self.tOrderPackage" FromRole="tOrder" ToRole="tPackage" />
+          <NavigationProperty Name="tService" Relationship="Self.tOrderService" FromRole="tOrder" ToRole="tService" />
+        </EntityType>
+        <EntityType Name="tPackage">
+          <Key>
+            <PropertyRef Name="IdPackage" />
+          </Key>
+          <Property Name="IdPackage" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdPackageType" Type="Int64" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Cost" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <NavigationProperty Name="tPackageType" Relationship="Self.FK_tPackage_tPackageType" FromRole="tPackage" ToRole="tPackageType" />
+          <NavigationProperty Name="tOrder" Relationship="Self.tOrderPackage" FromRole="tPackage" ToRole="tOrder" />
+          <NavigationProperty Name="tService" Relationship="Self.tServicePackage" FromRole="tPackage" ToRole="tService" />
+        </EntityType>
+        <EntityType Name="tPackageType">
+          <Key>
+            <PropertyRef Name="IdPackageType" />
+          </Key>
+          <Property Name="IdPackageType" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PackageType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tPackage" Relationship="Self.FK_tPackage_tPackageType" FromRole="tPackageType" ToRole="tPackage" />
+        </EntityType>
+        <EntityType Name="tPerson">
+          <Key>
+            <PropertyRef Name="IdPerson" />
+          </Key>
+          <Property Name="IdPerson" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdPosition" Type="Int64" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Mail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tOrder" Relationship="Self.FK_tOrder_tPerson" FromRole="tPerson" ToRole="tOrder" />
+          <NavigationProperty Name="tPosition" Relationship="Self.FK_tPerson_tPosition" FromRole="tPerson" ToRole="tPosition" />
+        </EntityType>
+        <EntityType Name="tPosition">
+          <Key>
+            <PropertyRef Name="IdPosition" />
+          </Key>
+          <Property Name="IdPosition" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Pay" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <NavigationProperty Name="tPerson" Relationship="Self.FK_tPerson_tPosition" FromRole="tPosition" ToRole="tPerson" />
+        </EntityType>
+        <EntityType Name="tResponsive">
+          <Key>
+            <PropertyRef Name="IdResponsive" />
+          </Key>
+          <Property Name="IdResponsive" Type="Int64" Nullable="false" />
+          <Property Name="IdOrder" Type="Int64" Nullable="false" />
+          <Property Name="Responsive" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="tOrder" Relationship="Self.FK_tResponsive_tOrder" FromRole="tResponsive" ToRole="tOrder" />
+        </EntityType>
+        <EntityType Name="tService">
+          <Key>
+            <PropertyRef Name="IdService" />
+          </Key>
+          <Property Name="IdService" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Photo" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Cost" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <NavigationProperty Name="tOrder" Relationship="Self.tOrderService" FromRole="tService" ToRole="tOrder" />
+          <NavigationProperty Name="tPackage" Relationship="Self.tServicePackage" FromRole="tService" ToRole="tPackage" />
+        </EntityType>
+        <Association Name="FK_tOrder_tClient">
+          <End Role="tClient" Type="Self.tClient" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tOrder" Type="Self.tOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tClient">
+              <PropertyRef Name="IdClient" />
+            </Principal>
+            <Dependent Role="tOrder">
+              <PropertyRef Name="IdClient" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tOrder_tPerson">
+          <End Role="tPerson" Type="Self.tPerson" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tOrder" Type="Self.tOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tPerson">
+              <PropertyRef Name="IdPerson" />
+            </Principal>
+            <Dependent Role="tOrder">
+              <PropertyRef Name="IdPersonal" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tResponsive_tOrder">
+          <End Role="tOrder" Type="Self.tOrder" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tResponsive" Type="Self.tResponsive" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tOrder">
+              <PropertyRef Name="IdOrder" />
+            </Principal>
+            <Dependent Role="tResponsive">
+              <PropertyRef Name="IdOrder" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tPackage_tPackageType">
+          <End Role="tPackageType" Type="Self.tPackageType" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tPackage" Type="Self.tPackage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tPackageType">
+              <PropertyRef Name="IdPackageType" />
+            </Principal>
+            <Dependent Role="tPackage">
+              <PropertyRef Name="IdPackageType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tPerson_tPosition">
+          <End Role="tPosition" Type="Self.tPosition" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tPerson" Type="Self.tPerson" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tPosition">
+              <PropertyRef Name="IdPosition" />
+            </Principal>
+            <Dependent Role="tPerson">
+              <PropertyRef Name="IdPosition" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="tOrderPackage">
+          <End Role="tOrder" Type="Self.tOrder" Multiplicity="*" />
+          <End Role="tPackage" Type="Self.tPackage" Multiplicity="*" />
+        </Association>
+        <Association Name="tOrderService">
+          <End Role="tOrder" Type="Self.tOrder" Multiplicity="*" />
+          <End Role="tService" Type="Self.tService" Multiplicity="*" />
+        </Association>
+        <Association Name="tServicePackage">
+          <End Role="tPackage" Type="Self.tPackage" Multiplicity="*" />
+          <End Role="tService" Type="Self.tService" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="DbCleaning_Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="tClient" EntityType="Self.tClient" />
+          <EntitySet Name="tOrder" EntityType="Self.tOrder" />
+          <EntitySet Name="tPackage" EntityType="Self.tPackage" />
+          <EntitySet Name="tPackageType" EntityType="Self.tPackageType" />
+          <EntitySet Name="tPerson" EntityType="Self.tPerson" />
+          <EntitySet Name="tPosition" EntityType="Self.tPosition" />
+          <EntitySet Name="tResponsive" EntityType="Self.tResponsive" />
+          <EntitySet Name="tService" EntityType="Self.tService" />
+          <AssociationSet Name="FK_tOrder_tClient" Association="Self.FK_tOrder_tClient">
+            <End Role="tClient" EntitySet="tClient" />
+            <End Role="tOrder" EntitySet="tOrder" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tOrder_tPerson" Association="Self.FK_tOrder_tPerson">
+            <End Role="tPerson" EntitySet="tPerson" />
+            <End Role="tOrder" EntitySet="tOrder" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tResponsive_tOrder" Association="Self.FK_tResponsive_tOrder">
+            <End Role="tOrder" EntitySet="tOrder" />
+            <End Role="tResponsive" EntitySet="tResponsive" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tPackage_tPackageType" Association="Self.FK_tPackage_tPackageType">
+            <End Role="tPackageType" EntitySet="tPackageType" />
+            <End Role="tPackage" EntitySet="tPackage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tPerson_tPosition" Association="Self.FK_tPerson_tPosition">
+            <End Role="tPosition" EntitySet="tPosition" />
+            <End Role="tPerson" EntitySet="tPerson" />
+          </AssociationSet>
+          <AssociationSet Name="tOrderPackage" Association="Self.tOrderPackage">
+            <End Role="tOrder" EntitySet="tOrder" />
+            <End Role="tPackage" EntitySet="tPackage" />
+          </AssociationSet>
+          <AssociationSet Name="tOrderService" Association="Self.tOrderService">
+            <End Role="tOrder" EntitySet="tOrder" />
+            <End Role="tService" EntitySet="tService" />
+          </AssociationSet>
+          <AssociationSet Name="tServicePackage" Association="Self.tServicePackage">
+            <End Role="tPackage" EntitySet="tPackage" />
+            <End Role="tService" EntitySet="tService" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище DbCleaning_ModelContainer" CdmEntityContainer="DbCleaning_Entities">
+          <EntitySetMapping Name="tClient">
+            <EntityTypeMapping TypeName="DbCleaning_Model.tClient">
+              <MappingFragment StoreEntitySet="tClient">
+                <ScalarProperty Name="IdClient" ColumnName="IdClient" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Mail" ColumnName="Mail" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tOrder">
+            <EntityTypeMapping TypeName="DbCleaning_Model.tOrder">
+              <MappingFragment StoreEntitySet="tOrder">
+                <ScalarProperty Name="IdOrder" ColumnName="IdOrder" />
+                <ScalarProperty Name="IdClient" ColumnName="IdClient" />
+                <ScalarProperty Name="IdPersonal" ColumnName="IdPersonal" />
+                <ScalarProperty Name="Cost" ColumnName="Cost" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tPackage">
+            <EntityTypeMapping TypeName="DbCleaning_Model.tPackage">
+              <MappingFragment StoreEntitySet="tPackage">
+                <ScalarProperty Name="IdPackage" ColumnName="IdPackage" />
+                <ScalarProperty Name="IdPackageType" ColumnName="IdPackageType" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Cost" ColumnName="Cost" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tPackageType">
+            <EntityTypeMapping TypeName="DbCleaning_Model.tPackageType">
+              <MappingFragment StoreEntitySet="tPackageType">
+                <ScalarProperty Name="IdPackageType" ColumnName="IdPackageType" />
+                <ScalarProperty Name="PackageType" ColumnName="PackageType" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tPerson">
+            <EntityTypeMapping TypeName="DbCleaning_Model.tPerson">
+              <MappingFragment StoreEntitySet="tPerson">
+                <ScalarProperty Name="IdPerson" ColumnName="IdPerson" />
+                <ScalarProperty Name="IdPosition" ColumnName="IdPosition" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Mail" ColumnName="Mail" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tPosition">
+            <EntityTypeMapping TypeName="DbCleaning_Model.tPosition">
+              <MappingFragment StoreEntitySet="tPosition">
+                <ScalarProperty Name="IdPosition" ColumnName="IdPosition" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Pay" ColumnName="Pay" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tResponsive">
+            <EntityTypeMapping TypeName="DbCleaning_Model.tResponsive">
+              <MappingFragment StoreEntitySet="tResponsive">
+                <ScalarProperty Name="IdResponsive" ColumnName="IdResponsive" />
+                <ScalarProperty Name="IdOrder" ColumnName="IdOrder" />
+                <ScalarProperty Name="Responsive" ColumnName="Responsive" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tService">
+            <EntityTypeMapping TypeName="DbCleaning_Model.tService">
+              <MappingFragment StoreEntitySet="tService">
+                <ScalarProperty Name="IdService" ColumnName="IdService" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Photo" ColumnName="Photo" />
+                <ScalarProperty Name="Cost" ColumnName="Cost" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="tOrderPackage" TypeName="DbCleaning_Model.tOrderPackage" StoreEntitySet="tOrderPackage">
+            <EndProperty Name="tOrder">
+              <ScalarProperty Name="IdOrder" ColumnName="IdOrder" />
+            </EndProperty>
+            <EndProperty Name="tPackage">
+              <ScalarProperty Name="IdPackage" ColumnName="IdPackage" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="tOrderService" TypeName="DbCleaning_Model.tOrderService" StoreEntitySet="tOrderService">
+            <EndProperty Name="tOrder">
+              <ScalarProperty Name="IdOrder" ColumnName="IdOrder" />
+            </EndProperty>
+            <EndProperty Name="tService">
+              <ScalarProperty Name="IdService" ColumnName="IdService" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="tServicePackage" TypeName="DbCleaning_Model.tServicePackage" StoreEntitySet="tServicePackage">
+            <EndProperty Name="tPackage">
+              <ScalarProperty Name="IdPackage" ColumnName="IdPackage" />
+            </EndProperty>
+            <EndProperty Name="tService">
+              <ScalarProperty Name="IdService" ColumnName="IdService" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
